@@ -1,0 +1,22 @@
+name: 每日生成职测&综应A类试卷
+on:
+  schedule:
+    - cron: "30 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  make-paper:
+    runs-on: ubuntu‑latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: 执行生成脚本
+        run: python3 script.py
+      - name: 提交新试卷
+        run: |
+          git config --global user.name "paper‑bot"
+          git config --global user.email "bot@demo.com"
+          git add *.md
+          git commit -m "自动生成试卷 $(date +%Y‑%m‑%d)"
+          git push
